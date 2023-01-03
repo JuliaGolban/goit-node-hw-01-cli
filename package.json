@@ -39,14 +39,18 @@
     "nodemon": "^2.0.20"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "dev": "nodemon index"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JuliaGolban/goit-node-hw-01-cli.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Julia Golban",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/JuliaGolban/goit-node-hw-01-cli/issues"
