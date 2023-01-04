@@ -1,34 +1,42 @@
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
-const { argv } = yargs(hideBin(process.argv));
+const { Command } = require('commander');
+const program = new Command();
+program
+  .option('-a, --action <type>', 'choose action')
+  .option('-i, --id <type>', 'user id')
+  .option('-n, --name <type>', 'user name')
+  .option('-e, --email <type>', 'user email')
+  .option('-p, --phone <type>', 'user phone');
 
-const contacts = require('./contacts');
+program.parse(process.argv);
+const argv = program.opts();
+
+const operations = require('./contacts');
 
 /*
- * Get all contacts - contacts.listContacts();
- * Get contact by id - contacts.getContactById(id);
- * Add new contact - contacts.addContact(name, email, phone);
- * Delete contact by id - contacts.removeContact(id);
+ * Get all contacts - operations.listContacts();
+ * Get contact by id - operations.getContactById(id);
+ * Add new contact - operations.addContact(name, email, phone);
+ * Delete contact by id - operations.removeContact(id);
  */
 
 async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case 'list':
-      const list = await contacts.listContacts();
-      console.log('list', list);
+      const list = await operations.listContacts();
+      console.table('list', list);
       break;
 
     case 'get':
-      const contact = await contacts.getContactById(id);
+      const contact = await operations.getContactById(id);
       console.log('get', contact);
       break;
 
     case 'add':
-      await contacts.addContact(id, name, email, phone);
+      await operations.addContact(id, name, email, phone);
       break;
 
     case 'remove':
-      const deletedContact = await contacts.removeContact(id);
+      const deletedContact = await operations.removeContact(id);
       console.log('remove', deletedContact);
       break;
 
