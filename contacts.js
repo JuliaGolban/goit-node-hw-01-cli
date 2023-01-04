@@ -1,68 +1,60 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-const uuid = require('uuid');
-
 const contactsPath = path.join(__dirname, 'db/contacts.json');
 
-function listContacts() {
-  fs.readFile(contactsPath)
-    .then(data => {
-      const contacts = JSON.parse(data.toString());
-      console.log('listContacts ~ contacts', contacts);
-      return contacts;
-    })
-    .catch(err => console.log(err.message));
-}
+const listContacts = async () => {
+  try {
+    const data = await fs.readFile(contactsPath);
+    const contacts = JSON.parse(data.toString());
+    return contacts;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-function getContactById(contactId) {
-  fs.readFile(contactsPath)
-    .then(data => {
-      const contacts = JSON.parse(data.toString());
-      const contact = contacts.find(contact => {
-        return contact.id === contactId;
-      });
-      console.log('getContactById ~ contact', contact);
-      return contact;
-    })
-    .catch(err => console.log('getContactById', err.message));
-}
+const getContactById = async contactId => {
+  try {
+    const contacts = await listContacts();
+    const contact = contacts.find(contact => {
+      return contact.id === contactId;
+    });
+    return contact ? contact : null;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-function removeContact(contactId) {
-  fs.readFile(contactsPath)
-    .then(data => {
-      const contacts = JSON.parse(data.toString());
-      const index = contacts.findIndex(contact => contact.id === contactId);
-      const deletedContact = contacts[index];
-      if (index !== -1) {
-        contacts.splice(index, 1);
-        fs.writeFile(contactsPath, JSON.stringify(contacts));
-      }
-      console.log('removeContact ~ deletedContact', deletedContact);
-      return deletedContact;
-    })
+const removeContact = async contactId => {
+  try {
+    const contacts = await listContacts();
+    const index = contacts.findIndex(contact => contact.id === contactId);
+    const deletedContact = contacts[index];
+    if (index !== -1) {
+      contacts.splice(index, 1);
+      await fs.writeFile(contactsPath, JSON.stringify(contacts));
+    }
+    return deletedContact ? deletedContact : null;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    .catch(err => console.log('removeContact', err.message));
-}
-
-function addContact(name, email, phone) {
+const addContact = async (id, name, email, phone) => {
   const newContact = {
-    id: uuid.v4(),
+    id: id,
     name: name,
     email: email,
     phone: phone,
   };
-  fs.readFile(contactsPath)
-    .then(data => {
-      const contacts = JSON.parse(data.toString());
-      contacts.push(newContact);
-      fs.writeFile(contactsPath, JSON.stringify(contacts));
-      console.log('addContact ~ newContact', newContact);
-      return newContact;
-    })
-
-    .catch(err => console.log('addContact', err.message));
-}
+  try {
+    const contacts = await listContacts();
+    contacts.push(newContact);
+    await fs.writeFile(contactsPath, JSON.stringify(contacts));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   listContacts,
