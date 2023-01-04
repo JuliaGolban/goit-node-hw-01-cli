@@ -23,21 +23,21 @@ async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case 'list':
       const list = await operations.listContacts();
-      console.table('list', list);
+      console.table(list);
       break;
 
     case 'get':
       const contact = await operations.getContactById(id);
-      console.log('get', contact);
+      console.log(contact);
       break;
 
     case 'add':
-      await operations.addContact(id, name, email, phone);
+      await operations.addContact(name, email, phone);
       break;
 
     case 'remove':
       const deletedContact = await operations.removeContact(id);
-      console.log('remove', deletedContact);
+      console.log(deletedContact);
       break;
 
     default:
@@ -45,32 +45,9 @@ async function invokeAction({ action, id, name, email, phone }) {
   }
 }
 
+invokeAction(argv);
+
 // use IIFE invokeAction(argv)
-(async () => {
-  await invokeAction(argv);
-})();
-
 // (async () => {
-//   await invokeAction({ action: 'list' });
-// })();
-
-// (async () => {
-//   await invokeAction({ action: 'get', id: '3' });
-// })();
-
-// (async () => {
-//   await invokeAction({
-//     action: 'add',
-//     id: '11',
-//     name: 'Julia',
-//     email: 'julia@gmail.com',
-//     phone: '(068) 068 68 68',
-//   });
-// })();
-
-// (async () => {
-//   await invokeAction({
-//     action: 'remove',
-//     id: '11',
-//   });
+//   await invokeAction(argv);
 // })();
